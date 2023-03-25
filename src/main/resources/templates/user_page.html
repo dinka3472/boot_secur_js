@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>User page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+</head>
+<body>
+
+<!-- Navigation -->
+<!-- шапка -->
+<div class="container-fluid">
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" id="title" > Email with role</a>
+        <form class="form-inline" th:action="@{/logout}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >Logout</button>
+        </form>
+    </nav>
+</div>
+<!-- шапка -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2 mt-5">
+            <div class="nav flex-column nav-pills" id="menu-tab" data-url="/user_info" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-user-tab" data-toggle="pill" href="#v-pills-user"
+                   role="tab" aria-controls="v-pills-user" aria-selected="false">User
+                </a>
+            </div>
+        </div>
+
+        <div class="col mt-5">
+            <div class="card-header">
+                <h2>User information page</h2>
+            </div>
+            <div class="tab-content mt-2" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-user" role="tabpanel" aria-labelledby="v-pills-user-tab">
+                    <table  id="user_info" class="table table-striped mt-4" >
+                        <thead>
+                        <div><h2 id="header1"></h2></div>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">FirstName</th>
+                            <th scope="col">SecondName</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Roles</th>
+                        </tr>
+                        </thead>
+                        <tbody id="body_user_table">
+                        <td class="val_ID" id = "user_id" th:data-url="${id}">id</td>
+                        <td class="val_firstName">FirstName</td>
+                        <td class="val_secondName" >SecondName</td>
+                        <td class="val_age">Age</td>
+                        <td class="val_email">Email</td>
+                        <td class="val_roles">Roles</td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <script>
+    jQuery(document).ready(function($) {
+        getUserBy_ID();
+        async function getUserBy_ID() {
+            let url = "/get/" + $('#user_id').data('url');
+            console.log(url);
+            let response = await fetch(url);
+            if (response.ok) { // если HTTP-статус в диапазоне 200-299
+                // получаем тело ответа (см. про этот метод ниже)
+                let user = await response.json();
+                let userRoles = user.roles;
+                let textOfRoles = '';
+                for (let role of Object.values(userRoles)) {
+                    textOfRoles += role.name + '\n';
+                }
+
+                $('.val_ID').text(user.id);
+                $('.val_firstName').text(user.firstName);
+                $('.val_secondName').text(user.secondName);
+                $('.val_age').text(user.age);
+                $('.val_email').text(user.email);
+                $('.val_roles').text(textOfRoles);
+                $('#title').text(user.email + ' with roles: ' + textOfRoles);
+
+            } else {
+                alert("Ошибка HTTP: " + response.status);
+                console.log(response.status);
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Admin page</title>
+    <link rel="shortcut icon" href="">
+    <link rel="icon" type="image/gif" href="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+</head>
+<body>
+
+<!-- Navigation -->
+<!-- шапка -->
+<div class="container-fluid">
+    <nav class="navbar navbar-dark bg-dark">
+        <a id="title" class="navbar-brand"> Email with role</a>
+        <form class="form-inline" th:action="@{/logout}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >Logout</button>
+        </form>
+    </nav>
+</div>
+<!-- шапка -->
+
+<th:block th:replace="edit_modal :: modal('editUserModal')">modal</th:block>
+<th:block th:replace="modal_delete :: modal('deleteUserModal')">modal</th:block>
+
+<div class="container-fluid">
+    <!-- боковое меню -->
+    <div class="row">
+        <div class="col-2 mt-5">
+            <div class="nav flex-column nav-pills" id="menu-tab" data-url="/user_info" role="tablist" aria-orientation="vertical">
+                <a class="nav-link" id="user_tab" data-toggle="pill" href="#user_tab_content"
+                   role="tab" aria-controls="v-pills-user" aria-selected="false">User</a>
+                <a class="nav-link active"  id="admin_tab" data-toggle="pill" href="#admin_tub_content"
+                   role="tab" aria-controls="v-pills-admin" aria-selected="true">Admin</a>
+
+            </div>
+        </div>
+
+
+        <!-- tab content left menu -->
+        <div class="col">
+            <!-- tab content user info -->
+            <div class="tab-content mt-5" id="left_tabs_content">
+                <div class="tab-pane fade" id="user_tab_content" role="tabpanel" aria-labelledby="user_tab">
+                    <div class="card-header">
+                        <h2>User information page</h2>
+                        <table th:fragment="user-info" id="user_info" class="table table-striped mt-4" >
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">FirstName</th>
+                                <th scope="col">SecondName</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Roles</th>
+                            </tr>
+                            </thead>
+                            <tbody id="body_user_table">
+                            <td class="val_ID" id = "user_id" th:data-url="${id}">id</td>
+                            <td class="val_firstName">FirstName</td>
+                            <td class="val_secondName" >SecondName</td>
+                            <td class="val_age">Age</td>
+                            <td class="val_email">Email</td>
+                            <td class="val_roles">Roles</td>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- tab content admin info -->
+
+                <div class="tab-pane fade show active" id="admin_tub_content" role="tabpanel" aria-labelledby="admin_tab">
+
+                        <ul class="nav nav-tabs mt-5" id="top_tabs">
+                            <li class="nav-item">
+                                <a href="#tab_pane_allUsers"  id="admin-tab" data-url="/tab1" data-toggle="tab"  class="nav-link active">All users</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="#tab_pane_addUser" id="user-tab" data-url="/tab2" data-toggle="tab"  class="nav-link ">Add user</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <!-- tab content admin info -->
+                            <div class="tab-pane fade show active" id="tab_pane_allUsers" role="tabpanel" >
+                                <div class="card-header"><h4>All users</h4></div>
+                                <!-- table allUsers -->
+                                <table class="table table-striped mt-3" id="table_all_users">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">FirstName</th>
+                                        <th scope="col">SecondName</th>
+                                        <th scope="col">Age</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Roles</th>
+                                        <th scope="col">Edit</th>
+                                        <th scope="col">Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody> </tbody>
+                                </table>
+                            </div>
+
+                            <!-- tab pane adduser -->
+                            <div class="tab-pane fade" id="tab_pane_addUser" role="tabpanel">
+                                <div class="card-header"><h4>Add new user</h4></div>
+                                <div class="row justify-content-center">
+                                    <div class="col-6 text-center">
+                                        <form class="was-validated" id="add-user-form" >
+                                            <div class="form-group">
+                                                <label for="addFirstName">First name</label>
+                                                <input type="text"  th:name="firstName" class="form-control" id="addFirstName" required >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="addSecondName">Second name</label>
+                                                <input type="text" th:name="secondName" class="form-control" id="addSecondName" required >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="addAge">Age</label>
+                                                <input type="text" th:name="age" class="form-control" id="addAge" required >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="addEmail">Email</label>
+                                                <input type="email"  th:name="email" class="form-control" id="addEmail" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="addPassword">Password</label>
+                                                <input type="password" th:name="password" class="form-control" id="addPassword" required >
+                                            </div>
+                                            <div class="form-group">
+                                                <form th:name="roles"  >
+                                                    <label for="addRoles">Roles</label>
+                                                    <select multiple class="form-control" id="addRoles" required >
+                                                        <option th:each="role : ${rolesList}"  th:value="${role.name}"  th:text="${role.name}"></option>
+                                                    </select>
+                                                </form>
+                                            </div>
+                                        </form>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" id="add-user-button" >Close</button>
+                                            <button id="add-button" type="button" class="btn btn-primary">Add new user</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<script src="/static/app.js" type="text/javascript"></script>
+
+</body>
+</html>

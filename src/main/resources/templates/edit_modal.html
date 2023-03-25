@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>User page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="modal fade" th:fragment="modal(id)" id="editUserModal" th:id="${id}" tabindex="-1"  aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel">Edit user</h5>
+                <button type="button" id="99" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" >
+                <form class="was-validated" id="form_edit_user" >
+                    <div class="form-group">
+                        <label for="newId" class="col-form-label">Id:</label>
+                        <input type="text" value="id" name="id" class="form-control" id="newId" readonly="true" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newFirstName">First name</label>
+                        <input type="text"  value="firstName" name="firstName" class="form-control" id="newFirstName" required >
+                    </div>
+                    <div class="form-group">
+                        <label for="newSecondName">Second name</label>
+                        <input type="text" value="secondName" name="secondName" class="form-control" id="newSecondName" required >
+                    </div>
+                    <div class="form-group">
+                        <label for="newAge">Age</label>
+                        <input type="text" value="age" name="age" class="form-control" id="newAge" required >
+                    </div>
+                    <div class="form-group">
+                        <label for="newEmail">Email</label>
+                        <input type="email" value="email" name="email" class="form-control" id="newEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Password</label>
+                        <input type="password" value="password" name="password" class="form-control" id="newPassword" required >
+                    </div>
+
+                    <div class="form-group">
+                        <form id="form_edit_roles" th:name="roles"  >
+                            <label for="newRoles">Roles</label>
+                            <select multiple class="form-control" id="newRoles" required >
+                                <option th:each="role : ${rolesList}"  th:value="${role.name}" th:name="name" th:text="${role.name}"></option>
+                            </select>
+                        </form>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="closeModal-btn" data-dismiss="modal">Close</button>
+                <button id="edit-button" type="submit" class="btn btn-primary">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
