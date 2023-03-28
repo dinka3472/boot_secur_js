@@ -1,12 +1,11 @@
 package ru.kata.spring.boot_security.demo.DTO;
-
 import org.springframework.validation.annotation.Validated;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.HashSet;
+
 @Validated
 public class UserDTO {
 
@@ -15,13 +14,11 @@ public class UserDTO {
     @NotEmpty(message = "FirstName should not be empty")
     private String firstName;
 
-
     @NotEmpty(message = "SecondName should not be empty")
     private String secondName;
 
     @Min(value = 0, message = "Age should be greater 0")
     private Long age;
-
 
     @NotEmpty(message = "Password should not be empty")
     private String password;
@@ -29,7 +26,6 @@ public class UserDTO {
     @Email
     @NotEmpty(message = "Email should not be empty")
     private String email;
-
 
     @NotEmpty(message = "User should have any role")
     private Collection<RoleDTO> roles = new HashSet<>();
@@ -73,7 +69,6 @@ public class UserDTO {
     public void setEmail(String email) {
         this.email = email;
     }
-
 
     public Long getId() {
         return id;

@@ -116,7 +116,9 @@ $("#edit-button").click(async function () {
     if (response.ok) {
         await setUsersList();
     } else {
-        console.log(response.message);
+        let responseJson = await response.json();
+        alert(responseJson.message);
+
     }
     $('#editUserModal').modal('hide');
     $('.modal-backdrop').hide();
@@ -157,8 +159,8 @@ $('#add-button').click(async function() {
         document.getElementById("tab_pane_allUsers").click();
         document.getElementById("admin-tab").click();
     } else {
-
-        console.log(response.statusText);
+        let responseJson = await response.json();
+        alert(responseJson.message);
     }
 
 });

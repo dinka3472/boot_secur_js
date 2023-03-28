@@ -1,26 +1,16 @@
 package ru.kata.spring.boot_security.demo.models;
-
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.stream.Collectors;
-
-
-////////////////////////////////////////////////////////////////////////
-// Я начала изучать/делать валидацию форм,
-// можно к этой задаче снять замечание по аннотации Column?
-////////////////////////////////////////////////////////////////////
-
 
 
 @Entity
@@ -28,29 +18,22 @@ import java.util.stream.Collectors;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "firstname")
     @NotEmpty(message = "FirstName should not be empty")
     private String firstName;
 
-    @Column(name = "secondname")
     @NotEmpty(message = "SecondName should not be empty")
     private String secondName;
 
     @Min(value = 0, message = "Age should be greater 0")
-    @Column(name = "age")
     private Long age;
 
-
     @NotEmpty(message = "Password should not be empty")
-    @Column(name = "password")
     private String password;
 
-    @Email
+    @Email(message = "Email incorrect")
     @NotEmpty(message = "Email should not be empty")
-    @Column(name = "email")
     private String email;
 
     @ManyToMany()

@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.DTO.RoleDTO;
@@ -13,13 +12,11 @@ import ru.kata.spring.boot_security.demo.DTO.UserDTO;
 import ru.kata.spring.boot_security.demo.Util.UserErrorResponse;
 import ru.kata.spring.boot_security.demo.Util.UserNotCreatedException;
 import ru.kata.spring.boot_security.demo.Util.UserNotFoundException;
+import ru.kata.spring.boot_security.demo.Util.UserValidator;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
-
-import javax.validation.Valid;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,47 +27,44 @@ public class AdminRestController {
     private UserService userService;
     private RoleService roleService;
     private ModelMapper modelMapper;
+    private UserValidator userValidator;
 
     @Autowired
-    public AdminRestController(UserService userService, RoleService roleService, ModelMapper modelMapper) {
+    public AdminRestController(UserService userService, RoleService roleService, ModelMapper modelMapper, UserValidator userValidator) {
         this.userService = userService;
         this.roleService = roleService;
         this.modelMapper = modelMapper;
+        this.userValidator = userValidator;
     }
 
-
     @PostMapping("/save")
-    @ResponseBody
     public ResponseEntity<HttpStatus> saveNewUser( @RequestBody @Validated UserDTO userDTO, BindingResult bindingResult) {
+        userValidator.validate(userDTO, bindingResult);
         checkBindinfResultErrors(bindingResult);
         userService.saveUser(createUserFromDTO(userDTO));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-
     @GetMapping("/get/allUsers")
-    public List<UserDTO> allUsersDTO(){
+    public ResponseEntity<List<UserDTO>> allUsersDTO(){
         List<User> allUsers = (userService).findAllUsers();
-        return allUsers.stream().map(this::createDTOfromUser).collect(Collectors.toList());
+        return new ResponseEntity<>(allUsers.stream().map(this::createDTOfromUser).collect(Collectors.toList()),
+                HttpStatus.OK);
     }
 
-
     @GetMapping("/get/{userId}")
-    @ResponseBody
-    public UserDTO findById(@PathVariable Long userId) {
-        return createDTOfromUser(userService.findUserById(userId));
+    public ResponseEntity<UserDTO> findById(@PathVariable Long userId) {
+        return new ResponseEntity<>(createDTOfromUser(userService.findUserById(userId)), HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")
-    @ResponseBody
     public ResponseEntity<HttpStatus> deleteById(@PathVariable Long userId) {
        userService.deleteUser(userId);
        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PutMapping("/update")
-    @ResponseBody
-    public ResponseEntity<HttpStatus> updateUser(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> updateUser(@RequestBody @Validated UserDTO userDTO, BindingResult bindingResult) {
         checkBindinfResultErrors(bindingResult);
         userService.updateUser(createUserFromDTO(userDTO));
         return ResponseEntity.ok(HttpStatus.OK);
@@ -85,7 +79,6 @@ public class AdminRestController {
                     .append(" - ")
                     .append(error.getDefaultMessage())
                     .append(";"));
-            System.out.println(bindingResult.getFieldErrors());
             throw new UserNotCreatedException(errorMsg.toString());
         }
     }
@@ -106,7 +99,6 @@ public class AdminRestController {
     }
 
     private User createUserFromDTO(UserDTO userDTO) {
-
         User user = modelMapper.map(userDTO, User.class);
         List<Role> roles = user.getRoles().stream()
                 .map(role -> roleService.findRoleByName(role.getName()).orElseThrow())
